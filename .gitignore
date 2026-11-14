@@ -1,0 +1,29 @@
+# Android / Gradle
+.gradle/
+**/build/
+local.properties
+
+# Kotlin
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+
+# Native build output
+.cxx/
+.externalNativeBuild/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated files
+captures/
+
+# Local backups
+*.backup
+*.kmp-backup
+
+# Local Gradle configuration
+gradle/gradle-daemon-jvm.properties
