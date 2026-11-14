@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-ios:
-    name: Build Kotlin iOS Frameworks
+    name: Build Kotlin iOS XCFramework
     runs-on: macos-15
 
     steps:
@@ -29,18 +29,13 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build iOS Simulator Framework
-        run: ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
+      - name: Build iOS XCFramework
+        run: ./gradlew :shared:assembleCompAISharedXCFramework
 
-      - name: Build iOS Device Framework
-        run: ./gradlew :shared:linkDebugFrameworkIosArm64
-
-      - name: Upload iOS Frameworks
+      - name: Upload XCFramework
         uses: actions/upload-artifact@v4
         with:
-          name: CompAI-iOS-Frameworks
-          path: |
-            shared/build/bin/iosSimulatorArm64/debugFramework/CompAIShared.framework
-            shared/build/bin/iosArm64/debugFramework/CompAIShared.framework
+          name: CompAI-iOS-XCFramework
+          path: shared/build/XCFrameworks/debug/CompAIShared.xcframework
           if-no-files-found: error
           retention-days: 14

@@ -5,14 +5,14 @@ plugins {
 }
 
 kotlin {
-    // Android
     android {
         namespace = "com.example.compaishared"
         compileSdk = 37
         minSdk = 26
     }
 
-    // iOS
+    val compAIXCFramework = XCFramework("CompAIShared")
+
     val iosTargets = listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -22,13 +22,13 @@ kotlin {
         it.binaries.framework {
             baseName = "CompAIShared"
             isStatic = true
+
+            compAIXCFramework.add(this)
         }
     }
 
-    // JVM target for running shared tests on Windows
     jvm()
 
-    // Shared test dependencies
     sourceSets {
         commonTest.dependencies {
             implementation(kotlin("test"))
