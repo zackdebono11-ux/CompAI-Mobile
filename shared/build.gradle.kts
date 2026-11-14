@@ -1,4 +1,4 @@
-
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -11,7 +11,7 @@ kotlin {
         minSdk = 26
     }
 
-    val compAIXCFramework = XCFramework("CompAIShared")
+    val compAIXCFramework = XCFramework()
 
     val iosTargets = listOf(
         iosArm64(),
