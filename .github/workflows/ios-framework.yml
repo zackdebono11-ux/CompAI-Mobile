@@ -1,5 +1,5 @@
 
-name: Build iOS Framework
+name: Build CompAI iOS App
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-ios:
-    name: Build Kotlin iOS XCFramework
+    name: Build CompAI for iOS
     runs-on: macos-15
 
     steps:
@@ -29,16 +29,37 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: List available framework tasks
-        run: ./gradlew :shared:tasks --all
-
-      - name: Build iOS XCFramework
+      - name: Build Kotlin XCFramework
         run: ./gradlew :shared:assembleSharedDebugXCFramework
 
-      - name: Upload XCFramework
+      - name: Prepare iOS framework
+        run: |
+          mkdir -p iosApp/Frameworks
+          cp -R shared/build/XCFrameworks/debug/Shared.xcframework iosApp/Frameworks/
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: iosApp
+        run: xcodegen generate
+
+      - name: Build CompAI iOS Simulator App
+        run: |
+          xcodebuild \
+            -project iosApp/CompAI.xcodeproj \
+            -scheme CompAI \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Upload iOS build
         uses: actions/upload-artifact@v4
         with:
-          name: CompAI-iOS-XCFramework
-          path: shared/build/XCFrameworks/debug/Shared.xcframework
+          name: CompAI-iOS-Build
+          path: build/ios/Build/Products/Debug-iphonesimulator/CompAI.app
           if-no-files-found: error
           retention-days: 14
