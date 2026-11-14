@@ -10,6 +10,8 @@ on:
 
 jobs:
   build-ios:
+
+  
     name: Build Kotlin iOS XCFramework
     runs-on: macos-15
 
@@ -28,6 +30,8 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+            - name: List available framework tasks
+        run: ./gradlew :shared:tasks --all
 
       - name: Build iOS XCFramework
         run: ./gradlew :shared:assembleCompAISharedDebugXCFramework
