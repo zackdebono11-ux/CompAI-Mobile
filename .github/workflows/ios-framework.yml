@@ -1,0 +1,43 @@
+
+name: Build iOS Framework
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    name: Build Kotlin iOS Frameworks
+    runs-on: macos-15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build iOS Simulator Framework
+        run: ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
+
+      - name: Build iOS Device Framework
+        run: ./gradlew :shared:linkDebugFrameworkIosArm64
+
+      - name: Upload iOS Frameworks
+        uses: actions/upload-artifact@v4
+        with:
+          name: CompAI-iOS-Frameworks
+          path: |
+            shared/build/bin/iosSimulatorArm64/debugFramework/CompAIShared.framework
+            shared/build/bin/iosArm64/debugFramework/CompAIShared.framework
+          if-no-files-found: error
+          retention-days: 14
